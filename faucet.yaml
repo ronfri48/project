@@ -1,0 +1,50 @@
+vlans:
+    office:
+        vid: 100
+        description: "office network"
+
+dps:
+    sw1:
+        dp_id: 0x1
+        hardware: "Open vSwitch"
+        interfaces:
+            1:
+                name: "host1"
+                description: "host2 network namespace"
+                native_vlan: office
+            2:
+                name: "host2"
+                description: "host2 network namespace"
+                native_vlan: office
+            3:
+                name: "dnsmasq"
+                description: "dnsmasq network namespace"
+                native_vlan: office
+
+            
+acls:
+    nfv-dns:
+        # Force UDP DNS to our DNS server
+        - rule:
+            dl_type: 0x800      # ipv4
+            nw_proto: 17        # udp
+            udp_dst: 53         # dns
+            actions:
+                output:
+                    set_fields:
+                        - eth_dst: "2e:b2:98:76:63:61" # MAC address of dnsmasq namespace
+                allow: True
+        # Force TCP DNS to our DNS server
+        - rule:
+            dl_type: 0x800      # ipv4
+            nw_proto: 6         # tcp
+            tcp_dst: 53         # dns
+            actions:
+                output:
+                    set_fields:
+                        - eth_dst: "2e:b2:98:76:63:61" # MAC address of dnsmasq namespace
+                allow: True
+    allow-all:
+        - rule:
+            actions:
+                allow: True
