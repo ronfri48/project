@@ -4,6 +4,8 @@ import subprocess
 from datetime import datetime
 from collections import namedtuple
 
+from .mud_parser.profile import Profile
+
 
 IOT = namedtuple.namedtuple('IOT', ['hostname', 'ip', 'timestamp'])
 
@@ -47,10 +49,11 @@ class MUD:
       self._mud_pool[iot] = new_entries
    
   def _apply_mud_pool(self):
+    # TODO: Move MUD files from places to switch path
     pass
   
   def _parse_mud_file(self, mud_file_content):
-    pass
+    return Profile(mud_file_content).policies
   
   def handle_update_mud_request(self, mud_file_path):
     with open(mud_file_path, 'rb') as mud_file:
