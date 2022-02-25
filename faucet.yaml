@@ -9,19 +9,20 @@ dps:
         hardware: "Open vSwitch"
         interfaces:
             1:
-                name: "host1"
-                description: "host2 network namespace"
+                name: "s1-eth1"
+                description: "host1 network namespace"
                 native_vlan: office
+                acls_in: [nfv-dns]
             2:
-                name: "host2"
+                name: "s1-eth2"
                 description: "host2 network namespace"
                 native_vlan: office
+                acls_in: [nfv-dns]
             3:
-                name: "dnsmasq"
-                description: "dnsmasq network namespace"
+                name: "s1-eth3"
+                description: "bah"
                 native_vlan: office
-
-            
+                acls_in: [nfv-dns]
 acls:
     nfv-dns:
         # Force UDP DNS to our DNS server
@@ -30,9 +31,7 @@ acls:
             nw_proto: 17        # udp
             udp_dst: 53         # dns
             actions:
-                output:
-                    set_fields:
-                        - eth_dst: "2e:b2:98:76:63:61" # MAC address of dnsmasq namespace
+                mirror:  s1-eth2
                 allow: True
         # Force TCP DNS to our DNS server
         - rule:
@@ -40,9 +39,7 @@ acls:
             nw_proto: 6         # tcp
             tcp_dst: 53         # dns
             actions:
-                output:
-                    set_fields:
-                        - eth_dst: "2e:b2:98:76:63:61" # MAC address of dnsmasq namespace
+                mirror: s1-eth2
                 allow: True
     allow-all:
         - rule:
