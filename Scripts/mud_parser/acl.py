@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from mudparser.acl_entry import AccessListEntry
+from mud_parser.acl_entry import AccessListEntry
 
 __all__ = ['AccessList']
 

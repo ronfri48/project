@@ -4,10 +4,10 @@ import subprocess
 from datetime import datetime
 from collections import namedtuple
 
-from .mud_parser.profile import Profile
+from mud_parser.profile import Profile
 
 
-IOT = namedtuple.namedtuple('IOT', ['hostname', 'ip', 'timestamp'])
+IOT = namedtuple('IOT', ['hostname', 'ip', 'timestamp'])
 
   
 class MUD:
@@ -30,7 +30,7 @@ class MUD:
     return repr(socket.gethostbyname(dns))
     
   def _remove_invalid_entries(self, should_update_ip=True):
-    current_timestamp = int(datetime.now().timestamp()))
+    current_timestamp = int(datetime.now().timestamp())
     for iot, entries in self._mud_pool.iter_items():
       new_entries = []
       for entry in entries:

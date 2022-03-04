@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from mudparser.matches import (IPv4Match, IPv6Match, TCPMatch, UDPMatch, EthMatch, MUDMatch)
+from mud_parser.matches import (IPv4Match, IPv6Match, TCPMatch, UDPMatch, EthMatch, MUDMatch)
 
 __all__ = ['AccessListEntry']
 
