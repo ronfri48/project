@@ -9,7 +9,7 @@ acls:
             actions:
                 allow: 1
                 output:
-                    - port: 3
+                    - port: 2
     mirror0:
         - rule:
             actions:
