@@ -1,0 +1,6 @@
+#ignore python virtula environment 
+env/*
+
+# ignore pycach
+__pycache__/
+ *.pyc

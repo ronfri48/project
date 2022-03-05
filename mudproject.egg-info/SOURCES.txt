@@ -1,0 +1,6 @@
+README.md
+setup.py
+mudproject.egg-info/PKG-INFO
+mudproject.egg-info/SOURCES.txt
+mudproject.egg-info/dependency_links.txt
+mudproject.egg-info/top_level.txt
