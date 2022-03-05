@@ -4,21 +4,34 @@ vlans:
         description: "office network"
 
 acls:
-    tap-dns:
+    mirror1:
+        - rule:
+            actions:
+                allow: 1
+                output:
+                    - port: 3
+    mirror0:
+        - rule:
+            actions:
+                allow: 1
+                output:
+                    - set_fields:
+                        - eth_src: "00:00:00:00:00:02" 
+    mirror:
         - rule:
             dl_type: 0x800
             nw_proto: 17
             udp_dst: 53
             actions:
-                allow: true
-                mirror: eth0
+                allow: 1
+                mirror: 3
         - rule:
             actions:
-                allow: true
+                allow: 1
     allow-all:
         - rule:
             actions:
-                allow: true
+                allow: 1
 
 dps:
     sw1:
@@ -26,17 +39,15 @@ dps:
         hardware: "Open vSwitch"
         interfaces:
             1:
-                name: "host1"
+                name: "h1"
                 description: "host1 network namespace"
                 native_vlan: office
-                acls_in: [tap-dns]
+                acls_in: [mirror1, allow-all]
             2:
-                name: "host2"
+                name: "h2"
                 description: "host2 network namespace"
                 native_vlan: office
-                acls_in: [allow-all]
             3:
-                name: "eth0"
-                description: "eth0 network interfaces"
+                name: "nat0"
+                description: "nat0 network interfaces"
                 native_vlan: office
-                acls_in: [tap-dns]
