@@ -2,6 +2,7 @@ from flask import Flask
 from update_mud_configs import MUD
 import time, traceback
 import threading
+from handlers.routes import configure_routes
 
 def every(delay, task):
   next_time = time.time() + delay
@@ -22,13 +23,9 @@ ONE_HOUE = 1000 * 60 * 60
 
 mud = MUD(ONE_HOUE)
 
-
 threading.Thread(target=lambda: every(300, mud.handle_invalidate_request)).start()
 
-@app.route('/update-mud', methods=['POST'])
-def update_mud():
-  file_path = f"/var/www/uploads/{file.filename}"
-  if request.method == 'POST':
-    file = request.files['mud_file']
-    file.save(file_path)
-    mud.handle_update_mud_request(file_path)
+configure_routes(app)
+
+if __name__ == '__main__':
+    app.run()
