@@ -7,7 +7,7 @@ def configure_routes(app):
 
     @app.route('/update-mud', methods=['POST'])
     def update_mud():
-        file_path = f"/var/www/uploads/{file.filename}"
+        file_path = f"/var/www/uploads/{request.files['mud_file'].filename}"
         if request.method == 'POST':
             file = request.files['mud_file']
             file.save(file_path)

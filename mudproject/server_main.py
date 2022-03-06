@@ -2,7 +2,7 @@ from flask import Flask
 from update_mud_configs import MUD
 import time, traceback
 import threading
-from handlers.routes import configure_routes
+from mudproject.handlers.routes import configure_routes
 
 def every(delay, task):
   next_time = time.time() + delay
