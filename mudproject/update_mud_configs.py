@@ -53,18 +53,18 @@ class MUD:
     pass
   
   def _parse_mud_file(self, mud_file_content):
-    return Profile(mud_file_content).policies
+    return Profile(mud_file_content)
   
   def handle_update_mud_request(self, mud_file_path):
     with open(mud_file_path, 'rb') as mud_file:
       try:
         content = mud_file.read()
-        mud_file_content = self._parse_mud_file(content)
+        mud_profile = self._parse_mud_file(content)
       except Exception as e:
         print(e)
         raise e
       
-    for mud in mud_file_content:
+    for mud in mud_profile.policies:
       self._add_to_mud_pool(mud.io_name, mud.hostname, mud.ip)
     
     self._apply_mud_pool()
