@@ -57,7 +57,12 @@ class MUD:
   
   def handle_update_mud_request(self, mud_file_path):
     with open(mud_file_path, 'rb') as mud_file:
-      mud_file_content = self._parse_mud_file(mud_file.read())
+      try:
+        content = mud_file.read()
+        mud_file_content = self._parse_mud_file(content)
+      except Exception as e:
+        print(e)
+        raise e
       
     for mud in mud_file_content:
       self._add_to_mud_pool(mud.io_name, mud.hostname, mud.ip)

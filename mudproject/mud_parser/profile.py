@@ -26,7 +26,7 @@ class Profile:
             self.parse()
 
     def parse(self):  # make this private maybe and get rid of autoparse?
-        json_obj = json.load(self._file)
+        json_obj = json.loads(self._file)
         # parse ACLs related info first, they will be stored in dictionary self.acls
         # and pointed to in object self.policies dictionary
         acls_json_obj = json_obj["ietf-access-control-list:access-lists"]
