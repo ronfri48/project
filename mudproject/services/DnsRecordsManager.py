@@ -8,10 +8,12 @@ import logging
 # dev config
 CACHE_FILE_PATH = "/Users/eladbirnboim/uploads/DnsRecordsManager.db"
 
+__all__ = ["DnsRecordsManager", "create", "get"]
+
 class DnsRecordsManager:
-    def __init__(self, db=None):
-        file_path = db if db is not None else CACHE_FILE_PATH
-        self._cache = shelve.open('CACHE_FILE_PATH', writeback=True)
+    def __init__(self):
+        file_path = CACHE_FILE_PATH
+        self._cache = shelve.open(file_path, writeback=True)
 
     def update_dns_ip(self, dns_name, ip):
         logging.info(f"update_dns_ip: called with DNS name: '{dns_name}' and ip: {ip}")
@@ -26,3 +28,20 @@ class DnsRecordsManager:
             self.update_dns_ip(dns_name, ip)
         
         return self._cache[dns_name]
+
+    def _clear_cache(self):
+        logging.info(f"clear_cache: Called")
+        self._cache.clear()
+
+dnsRecordsManager = None
+
+def get():
+    global dnsRecordsManager
+    if dnsRecordsManager is None:
+        dnsRecordsManager = DnsRecordsManager()
+    return dnsRecordsManager
+
+def clear():
+    global dnsRecordsManager
+    if dnsRecordsManager is not None:
+        dnsRecordsManager._clear_cache()
