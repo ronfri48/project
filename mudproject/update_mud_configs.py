@@ -1,6 +1,7 @@
 import abc
 import socket
 import subprocess
+import json
 from datetime import datetime
 from collections import namedtuple
 
@@ -8,7 +9,7 @@ from mud_parser.profile import Profile
 import mudproject.services.DnsRecordsManager as DnsRecordsManager
 
 
-IOT = namedtuple('IOT', ['hostname', 'ip', 'timestamp'])
+IOT = namedtuple('IOT', ['fqdn', 'ip', 'timestamp'])
 
   
 class MUD:
@@ -20,11 +21,11 @@ class MUD:
   def reload_muds():
     subprocess.call(['pkill', '-HUP', '-f', 'faucet.faucet'])
   
-  def _add_to_mud_pool(self, iot_name, hostname, ip):
+  def _add_to_mud_pool(self, iot_name, fqdn, ip):
     if 'iot_name' not in self._mud_pool.keys():
       self._mud_pool['iot_name'] = []
     
-    self._mud_pool['iot_name'].append(IOT(hostname, ip, int(datetime.now().timestamp())))
+    self._mud_pool['iot_name'].append(IOT(fqdn, ip, int(datetime.now().timestamp())))
   
   @abc.abstractmethod
   def _get_hostname_ip(dns):
@@ -37,11 +38,11 @@ class MUD:
       for entry in entries:
         if self._validity_time < current_timestamp - entry.timestamp:
           if should_update_ip:
-            new_ip = MUD._get_hostname_ip(entry.hostname)
-            print(f'Updating dns record: {entry.hostname}: {entry.ip} -> {entry.hostname}: {new_ip} for iot {iot}')
-            new_entries.append(IOT(entry.hostname, new_ip, int(datetime.now().timestamp())))
+            new_ip = MUD._get_hostname_ip(entry.fqdn)
+            print(f'Updating dns record: {entry.fqdn}: {entry.ip} -> {entry.fqdn}: {new_ip} for iot {iot}')
+            new_entries.append(IOT(entry.fqdn, new_ip, int(datetime.now().timestamp())))
           else:
-            print(f'Invalidating dns record: {entry.hostname}: {entry.ip} for iot {iot}')
+            print(f'Invalidating dns record: {entry.fqdn}: {entry.ip} for iot {iot}')
           
           continue
         
@@ -66,19 +67,23 @@ class MUD:
         raise e
       
     iot_name = mud_profile.system_info
-    for mud in mud_profile.policies:
-      self._add_to_mud_pool(iot_name, mud.hostname, mud.ip)
+    #json.loads(mud_profile.policies)
+    for mud_policy in mud_profile.policies:
+      dns_record_manager = DnsRecordsManager.get()
+      ip = dns_record_manager.get_ip(mud_policy.fqdn)
+      # TODO fix the rules by the real policy 
+      self._add_to_mud_pool(iot_name, mud_policy.fqdn, ip)
     
     self._apply_mud()
     MUD.reload_muds()
 
-  def handle_update_dns_record(self, dns, new_ip):
+  def handle_update_dns_record(self, fqdn, new_ip):
     dns_record_manager = DnsRecordsManager.get()
-    current_ip = dns_record_manager.get_ip(dns, allow_dns_query=False)
+    current_ip = dns_record_manager.get_ip(fqdn, allow_dns_query=False)
     if current_ip == new_ip:
       return
     
-    dns_record_manager.update_dns_ip(dns, new_ip)
+    dns_record_manager.update_dns_ip(fqdn, new_ip)
     # the ip was changed - need to iterate on the mud files and update the relavent rules
   
     number_of_changed_mud = 0
@@ -86,9 +91,9 @@ class MUD:
       new_entries = []
       is_changed = False
       for entry in entries:
-        if entry.hostname == dns:
+        if entry.fqdn == fqdn:
           is_changed = True
-          new_entries.append(IOT(entry.hostname, new_ip, int(datetime.now().timestamp())))
+          new_entries.append(IOT(entry.fqdn, new_ip, int(datetime.now().timestamp())))
         else:
           new_entries.append(entry)
       
