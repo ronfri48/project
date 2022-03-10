@@ -23,7 +23,8 @@ class DnsRecordsManager:
         logging.info(f"get_ip: called with DNS name: '{dns_name}'")
         if dns_name not in self._cache:
             if not allow_dns_query:
-                raise Exception("Could not find dns in cache")
+                return None
+                #raise Exception("Could not find dns in cache")
             ip = socket.gethostbyname(dns_name)
             self.update_dns_ip(dns_name, ip)
         

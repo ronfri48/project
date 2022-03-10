@@ -44,7 +44,7 @@ def configure_routes(app):
 
     @app.route('/update-mud', methods=['POST'])
     def update_mud():
-        if request.method == 'POST' and MUD_FILE in request.files:
+        if MUD_FILE in request.files:
             mud_file = request.files[MUD_FILE]
             file_path = f"{UPLOAD_FOLDER}/{mud_file.filename}"
             file = mud_file
@@ -53,3 +53,19 @@ def configure_routes(app):
             return 'Ok', 200
         
         return 'Bad Request', 400
+    
+    @app.route('/update-dns', methods=['POST'])
+    def update_dns():
+      content_type = request.headers.get('Content-Type')
+      if (content_type != 'application/json'):
+        return 'Content-Type not supported!', 400
+      json = request.json
+      if "dns" not in json or "ip" not in json:
+        return 'request should be json with "dns" and "ip" properties', 400
+
+      dns = json["dns"]
+      ip = json["ip"]
+
+      # update 
+      mud.handle_update_dns_record(dns, ip)
+      return 'Ok', 200

@@ -5,6 +5,7 @@ from datetime import datetime
 from collections import namedtuple
 
 from mud_parser.profile import Profile
+import mudproject.services.DnsRecordsManager as DnsRecordsManager
 
 
 IOT = namedtuple('IOT', ['hostname', 'ip', 'timestamp'])
@@ -48,7 +49,7 @@ class MUD:
       
       self._mud_pool[iot] = new_entries
    
-  def _apply_mud_pool(self):
+  def _apply_mud(self, iot_name):
     # TODO: Move MUD files from places to switch path
     pass
   
@@ -64,11 +65,40 @@ class MUD:
         print(e)
         raise e
       
+    iot_name = mud_profile.system_info
     for mud in mud_profile.policies:
-      self._add_to_mud_pool(mud.io_name, mud.hostname, mud.ip)
+      self._add_to_mud_pool(iot_name, mud.hostname, mud.ip)
     
-    self._apply_mud_pool()
+    self._apply_mud()
     MUD.reload_muds()
+
+  def handle_update_dns_record(self, dns, new_ip):
+    dns_record_manager = DnsRecordsManager.get()
+    current_ip = dns_record_manager.get_ip(dns, allow_dns_query=False)
+    if current_ip == new_ip:
+      return
+    
+    dns_record_manager.update_dns_ip(dns, new_ip)
+    # the ip was changed - need to iterate on the mud files and update the relavent rules
+  
+    number_of_changed_mud = 0
+    for iot_name, entries in self._mud_pool.iter_items():
+      new_entries = []
+      is_changed = False
+      for entry in entries:
+        if entry.hostname == dns:
+          is_changed = True
+          new_entries.append(IOT(entry.hostname, new_ip, int(datetime.now().timestamp())))
+        else:
+          new_entries.append(entry)
+      
+      if is_changed:
+        number_of_changed_mud += 1
+        self._apply_mud(iot_name)
+      
+    if number_of_changed_mud > 0:
+      MUD.reload_muds()
+
     
   def handle_invalidate_request(self):
     self._remove_invalid_entries()

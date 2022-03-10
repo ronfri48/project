@@ -13,8 +13,10 @@ def run_around_tests():
 
 def test_dns_record_manager_failed_to_find_record():
     dns_record_manager = DnsRecordsManager.get()
-    with pytest.raises(Exception, match="Could not find dns in cache"):
-        dns_record_manager.get_ip("ynet.co.il", allow_dns_query=False)
+    ip = dns_record_manager.get_ip("ynet.co.il", allow_dns_query=False)
+    assert ip == None
+    # with pytest.raises(Exception, match="Could not find dns in cache"):
+    #     dns_record_manager.get_ip("ynet.co.il", allow_dns_query=False)
 
 
 def test_dns_record_manager_get_ip():
