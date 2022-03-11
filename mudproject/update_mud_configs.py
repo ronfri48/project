@@ -21,11 +21,14 @@ class MUD:
   def reload_muds():
     subprocess.call(['pkill', '-HUP', '-f', 'faucet.faucet'])
   
+  def _clear_from_mud_pool(self, iot_name):
+    self._mud_pool.pop(iot_name, None)
+
   def _add_to_mud_pool(self, iot_name, fqdn, ip):
-    if 'iot_name' not in self._mud_pool.keys():
-      self._mud_pool['iot_name'] = []
+    if iot_name not in self._mud_pool.keys():
+      self._mud_pool[iot_name] = []
     
-    self._mud_pool['iot_name'].append(IOT(fqdn, ip, int(datetime.now().timestamp())))
+    self._mud_pool[iot_name].append(IOT(fqdn, ip, int(datetime.now().timestamp())))
   
   @abc.abstractmethod
   def _get_hostname_ip(dns):
@@ -67,14 +70,26 @@ class MUD:
         raise e
       
     iot_name = mud_profile.system_info
-    #json.loads(mud_profile.policies)
-    for mud_policy in mud_profile.policies:
-      dns_record_manager = DnsRecordsManager.get()
-      ip = dns_record_manager.get_ip(mud_policy.fqdn)
-      # TODO fix the rules by the real policy 
-      self._add_to_mud_pool(iot_name, mud_policy.fqdn, ip)
+    # Reset current rules 
+    self._clear_from_mud_pool(iot_name)
+
+    # Add rules from mud file to mud_pool
+    dns_record_manager = DnsRecordsManager.get()
+    for policy_key, policy_acls in mud_profile.policies.items():
+      for name, acl in policy_acls.items():
+        if policy_key == 'from-device-policy':
+          for key, entry in acl.entries.items():
+            for k, match in entry.matches.items():
+              if k == 'ipv4' and hasattr(match, 'mud_dst_dnsname') and len(match.mud_dst_dnsname):
+                try:
+                  fqdn = match.mud_dst_dnsname
+                  ip = dns_record_manager.get_ip(fqdn)
+                  self._add_to_mud_pool(iot_name, fqdn, ip)
+                except Exception as e:
+                  print(e)
+                
     
-    self._apply_mud()
+    self._apply_mud(iot_name)
     MUD.reload_muds()
 
   def handle_update_dns_record(self, fqdn, new_ip):
