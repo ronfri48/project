@@ -3,6 +3,11 @@ import yaml
 from yaml.loader import SafeLoader
 
 
+def save_faucet_config(path, new_content):
+    with open(path, 'w') as file:
+        _ = yaml.dump(new_content, file)
+
+
 def parse_base_file(base_file_path):
     with open(base_file_path) as f:
         return yaml.load(f, Loader=SafeLoader)
