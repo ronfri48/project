@@ -34,3 +34,5 @@ def test_post_mud_file():
     )
 
     assert response.status_code == 200
+
+def test_post_mud_file():

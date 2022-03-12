@@ -9,7 +9,7 @@
 
 from scapy.all import *
 from scapy.layers.dns import DNSQR
-
+import requests
 serverip = '127.0.0.1'
 result = {}
 
@@ -22,12 +22,14 @@ def packet_handler(pkt):
             result[pkt[DNSQR].qname[0:-1]] = 1
 
 
-def print_result():
+def send_result_to_config_managing_server():
     final = sorted(result, key=lambda x: result[x])
     print("No Of Times Visited" + "   " + "Domain Visited")
     for x in final:
         print(f"     {str(result[x])}                 {x}")
-
+    url = '/update-dns'
+    ip_domain_tuple = ()
+    new_ip_domain_post_request =
 
 sniff(count=int(9), filter="udp port 53 and ip src " + str(serverip), prn=packet_handler)
 print_result()
