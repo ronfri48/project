@@ -1,0 +1,12 @@
+acls:
+    wow:
+        - rule:
+            dl_type: 0x800
+            nw_dst: "10.0.0.2"
+            actions:
+                allow: 1
+        - rule:
+              dl_type: 0x800
+              nw_dst: "10.0.0.23"
+              actions:
+                  allow: 1
