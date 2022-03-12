@@ -36,6 +36,7 @@ def test_post_mud_file():
 
     assert response.status_code == 200
 
+
 def test_post_update_dns_record():
     app = Flask(__name__)
     configure_routes(app)
@@ -57,7 +58,8 @@ def test_post_update_dns_record():
     ip_domain_data = json.dumps({"ip": '1.2.3.4', "domain": "https://huebulb.com/huebulb"})
     update_ip_domain = client.post(
         url,
-        data = ip_domain_data
+        headers={'Content-Type': 'application/json'},
+        data=ip_domain_data
     )
     assert response.status_code == 200
-    assert  update_ip_domain.status_code == 200
+    assert update_ip_domain.status_code == 200
