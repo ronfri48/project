@@ -15,9 +15,9 @@ class IPv4Match:
         obj = self._json_obj
         keys = obj.keys()
         for key in keys:
-            if key is 'protocol':
+            if key == 'protocol':
                 self.protocol = obj[key]
-            elif key is 'ietf-acldns:dst-dnsname':
+            elif key == 'ietf-acldns:dst-dnsname':
                 self.mud_dst_dnsname = obj[key]
 
 
