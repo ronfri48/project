@@ -9,25 +9,35 @@
 
 from scapy.all import *
 from scapy.layers.dns import DNSQR
+from scapy.layers.dhcp import IP
+import socket
 
-serverip = '127.0.0.1'
+server_ip = '127.0.0.1'
+
 result = {}
 
 
+def _get_hostname_ip(domain):
+    return repr(socket.gethostbyname(domain))
+
+
 def packet_handler(pkt):
+    if pkt.haslayer(IP):
+        ip_src = pkt[IP].src
+        ip_dst = pkt[IP].dst
+        print(f"src: {ip_src} -> dst: {ip_dst}")
+
     if pkt.haslayer(DNSQR):
-        if pkt[DNSQR].qname[0:-1] in result.keys():
-            result[pkt[DNSQR].qname[0:-1]] = result[pkt[DNSQR].qname[0:-1]] + 1
-        else:
-            result[pkt[DNSQR].qname[0:-1]] = 1
+        a = pkt[DNSQR]
+        domain = str(a.qname)[2:-2]
+        domain_ip = _get_hostname_ip(domain)
+        print(f"domain: {domain}, ip: {domain_ip}")
+        result[domain] = domain_ip
 
 
-def print_result():
-    final = sorted(result, key=lambda x: result[x])
-    print("No Of Times Visited" + "   " + "Domain Visited")
-    for x in final:
-        print(f"     {str(result[x])}                 {x}")
+packet_filter = " and ".join([
+    "udp dst port 53",          # Filter UDP port 53
+    "udp[10] & 0x80 = 0",       # DNS queries only
+    ])
 
-
-sniff(count=int(9), filter="udp port 53 and ip src " + str(serverip), prn=packet_handler)
-print_result()
+sniff(filter=packet_filter, prn=packet_handler)
