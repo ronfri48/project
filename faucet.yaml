@@ -1,3 +1,6 @@
+include:
+    - acl1.yaml
+
 vlans:
     office:
         vid: 100
@@ -26,7 +29,7 @@ acls:
         - rule:
             dl_type: 0x0806     # ARP Packets
             actions:
-                allow: 1  
+                allow: 1
         - rule:
             eth_type: 2048
             ip_proto: 6
@@ -36,7 +39,7 @@ acls:
         - rule:
             actions:
                 allow: 0
-    97: 
+    97:
         - rule:
             dl_type: 0x800
             ipv4_dst: 10.0.0.2
@@ -92,6 +95,13 @@ acls:
                     port: 2
     94:
         - rule:
+            dl_type: 0x800
+            nw_dst: "10.0.0.1"
+            actions:
+                allow: 1
+        - rule:
+            dl_type: 0x800
+            nw_src: "10.0.0.1"
             actions:
                 allow: 0
     mirror1:
@@ -106,7 +116,7 @@ acls:
                 allow: 1
                 output:
                     - set_fields:
-                        - eth_src: "00:00:00:00:00:02" 
+                        - eth_src: "00:00:00:00:00:02"
     mirror:
         - rule:
             dl_type: 0x800
@@ -133,7 +143,7 @@ dps:
                 description: "host1 network namespace"
                 native_vlan: office
                 #acls_in: [99, 97]
-                acls_in: [95, 94]
+                acls_in: [95, wow, 94]
             2:
                 name: "h2"
                 description: "host2 network namespace"
