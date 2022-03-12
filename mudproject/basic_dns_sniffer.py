@@ -15,7 +15,7 @@ import json
 import requests
 
 server_ip = '127.0.0.1'
-mud_updater_ip = '127.0.0.1'
+mud_updater_ip = '10.0.0.3'
 
 result = {}
 
