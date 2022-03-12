@@ -60,12 +60,12 @@ def configure_routes(app):
       if (content_type != 'application/json'):
         return 'Content-Type not supported!', 400
       json = request.json
-      if "dns" not in json or "ip" not in json:
+      if "domain" not in json or "ip" not in json:
         return 'request should be json with "dns" and "ip" properties', 400
 
-      dns = json["dns"]
+      domain = json["domain"]
       ip = json["ip"]
 
       # update 
-      mud.handle_update_dns_record(dns, ip)
+      mud.handle_update_dns_record(domain, ip)
       return 'Ok', 200

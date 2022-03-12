@@ -6,10 +6,11 @@
     Twitter: @exploitprotocol
     Author is not responsible for any effect's caused by this script
 """
-
 from scapy.all import *
 from scapy.layers.dns import DNSQR
 import requests
+import json
+
 serverip = '127.0.0.1'
 result = {}
 
@@ -28,7 +29,7 @@ def send_result_to_config_managing_server():
     for x in final:
         print(f"     {str(result[x])}                 {x}")
     url = '/update-dns'
-    ip_domain_tuple = ()
+    ip_domain_tuple = json.dumps({})
     new_ip_domain_post_request =
 
 sniff(count=int(9), filter="udp port 53 and ip src " + str(serverip), prn=packet_handler)
