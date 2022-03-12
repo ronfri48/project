@@ -1,0 +1,155 @@
+include:
+    - acl1.yaml
+
+vlans:
+    office:
+        vid: 100
+        description: "office network"
+
+acls:
+    99:
+        - rule:
+            dl_type: 0x800
+            nw_proto: 17
+            tcp_src: 68
+            tcp_dst: 67
+            actions:
+                allow: 1
+                output:
+                    port: 2
+        - rule:
+            dl_type: 0x86dd     # ipv6
+            nw_proto: 17        # udp
+            udp_src: 547        # dhcpv6-server
+            udp_dst: 546        # dhcpv6-client
+            actions:
+                allow: 1
+                output:
+                    port: 2
+        - rule:
+            dl_type: 0x0806     # ARP Packets
+            actions:
+                allow: 1
+        - rule:
+            eth_type: 2048
+            ip_proto: 6
+            ipv4_dst: 10.0.0.2
+            actions:
+                allow: 1
+        - rule:
+            actions:
+                allow: 0
+    97:
+        - rule:
+            dl_type: 0x800
+            ipv4_dst: 10.0.0.2
+            actions:
+                allow: 1
+        - rule:
+            actions:
+                allow: 0
+    98:
+        - rule:
+            actions:
+                allow: 0
+                mirror: 3
+    96:
+        - rule:
+            actions:
+                allow: 0
+    95:
+        - rule:
+            dl_type: 0x800
+            nw_proto: 17
+            tcp_src: 68
+            tcp_dst: 67
+            actions:
+                allow: 1
+                output:
+                    port: 2
+        - rule:
+            dl_type: 0x0806     # ARP Packets
+            actions:
+                allow: 1
+                output:
+                    port: 2
+        - rule:
+            dl_type: 0x800
+            nw_dst: "10.0.0.2"
+            actions:
+                allow: 1
+        - rule:
+            dl_type: 0x800
+            nw_dst: "8.8.8.8"
+            actions:
+                allow: 1
+                output:
+                    port: 2
+        - rule:
+            dl_type: 0x800
+            ipv4_src: "8.8.8.8"
+            ipv4_dst: "10.0.0.1"
+            actions:
+                allow: 1
+                output:
+                    port: 2
+    94:
+        - rule:
+            dl_type: 0x800
+            nw_dst: "10.0.0.1"
+            actions:
+                allow: 1
+        - rule:
+            dl_type: 0x800
+            nw_src: "10.0.0.1"
+            actions:
+                allow: 0
+    mirror1:
+        - rule:
+            actions:
+                allow: 1
+                output:
+                    - port: 2
+    mirror0:
+        - rule:
+            actions:
+                allow: 1
+                output:
+                    - set_fields:
+                        - eth_src: "00:00:00:00:00:02"
+    mirror:
+        - rule:
+            dl_type: 0x800
+            nw_proto: 17
+            udp_dst: 53
+            actions:
+                allow: 1
+                mirror: 3
+        - rule:
+            actions:
+                allow: 1
+    allow-all:
+        - rule:
+            actions:
+                allow: 1
+
+dps:
+    sw1:
+        dp_id: 0x1
+        hardware: "Open vSwitch"
+        interfaces:
+            1:
+                name: "h1"
+                description: "host1 network namespace"
+                native_vlan: office
+                #acls_in: [99, 97]
+                acls_in: [95, wow, 94]
+            2:
+                name: "h2"
+                description: "host2 network namespace"
+                native_vlan: office
+                #acls_in: [98]
+            3:
+                name: "nat0"
+                description: "nat0 network interfaces"
+                native_vlan: office
