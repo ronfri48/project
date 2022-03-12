@@ -1,6 +1,10 @@
 #ignore python virtula environment 
 env/*
 
+.pytest_cache/*
+.idea/*
+mudproject.egg-info/*
+
 # ignore pycach
 __pycache__/
  *.pyc

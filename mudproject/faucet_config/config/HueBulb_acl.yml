@@ -1,0 +1,157 @@
+acls:
+  hubbulb_rule:
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 10.0.0.2
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 54.77.187.120
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 213.57.23.180
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.4
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.12
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.117.13.23
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.117.13.189
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.117.13.189
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.8
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.0
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.90.153.247
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 54.77.187.120
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 213.57.23.180
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.4
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.12
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.117.13.23
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.117.13.189
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.117.13.189
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.8
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.0
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.90.153.247
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 54.77.187.120
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 213.57.23.180
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.4
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.12
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.117.13.23
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.117.13.189
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.117.13.189
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.8
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 216.239.35.0
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 34.90.153.247

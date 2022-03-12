@@ -6,7 +6,7 @@ Reads a json formatted file and returns an object.
 
 import json
 import os
-from mud_parser.acl import AccessList
+from mudproject.mud_parser.acl import AccessList
 
 __all__ = ['Profile']
 

@@ -1,29 +1,45 @@
 import os
 import abc
+import asyncio
 import socket
 import subprocess
 from datetime import datetime
 from collections import namedtuple
 
-from mud_parser.profile import Profile
-import mudproject.services.DnsRecordsManager as DnsRecordsManager
+from mudproject.mud_parser.profile import Profile
+import mudproject.services.dns_records_manager as DnsRecordsManager
 
-from faucet_editor import parse_base_file, add_new_ips, save_faucet_config
+from mudproject.faucet_config.faucet_editor import parse_base_file, add_new_ips, save_faucet_config
 
 IOT = namedtuple('IOT', ['fqdn', 'ip', 'timestamp'])
 
 # TODO: Fix to real path
-ACLS_PATH = os.path.dirname(__file__)
+ACLS_PATH = os.path.join(os.path.dirname(__file__), r'faucet_config\config')
+
+async def run(cmd):
+    proc = await asyncio.create_subprocess_shell(
+        cmd,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE)
+
+    stdout, stderr = await proc.communicate()
+
+    print(f'[{cmd!r} exited with {proc.returncode}]')
+    if stdout:
+        print(f'[stdout]\n{stdout.decode()}')
+    if stderr:
+        print(f'[stderr]\n{stderr.decode()}')
+
+
+def reload_muds():
+    asyncio.run(run('pkill -HUP -f faucet.faucet'))
+    # Means: subprocess.call(['pkill', '-HUP', '-f', 'faucet.faucet'])
 
 
 class MUD:
     def __init__(self, validity_time):
         self._mud_pool = {}
         self._validity_time = validity_time
-
-    @abc.abstractmethod
-    def reload_muds():
-        subprocess.call(['pkill', '-HUP', '-f', 'faucet.faucet'])
 
     def _clear_from_mud_pool(self, iot_name):
         self._mud_pool.pop(iot_name, None)
@@ -62,10 +78,9 @@ class MUD:
         faucet_config = parse_base_file(config_path)
         rule_name = list(faucet_config['acls'].keys())[0]
         faucet_config['acls'][rule_name] = add_new_ips(faucet_config['acls'][rule_name],
-                                                     [iot.name for iot in self._mud_pool[iot_name]])
+                                                     [iot.ip for iot in self._mud_pool[iot_name]])
 
         save_faucet_config(config_path, faucet_config)
-
 
     def _apply_mud_pool(self):
         for iot_name in self._mud_pool.keys():
@@ -103,7 +118,7 @@ class MUD:
                                     print(e)
 
         self._apply_mud(iot_name)
-        MUD.reload_muds()
+        reload_muds()
 
     def handle_update_dns_record(self, fqdn, new_ip):
         dns_record_manager = DnsRecordsManager.get()
@@ -112,10 +127,10 @@ class MUD:
             return
 
         dns_record_manager.update_dns_ip(fqdn, new_ip)
-        # the ip was changed - need to iterate on the mud files and update the relavent rules
+        # the ip was changed - need to iterate on the mud files and update the relevant rules
 
         number_of_changed_mud = 0
-        for iot_name, entries in self._mud_pool.iter_items():
+        for iot_name, entries in self._mud_pool.items():
             new_entries = []
             is_changed = False
             for entry in entries:
@@ -130,9 +145,9 @@ class MUD:
                 self._apply_mud(iot_name)
 
         if number_of_changed_mud > 0:
-            MUD.reload_muds()
+            reload_muds()
 
     def handle_invalidate_request(self):
         self._remove_invalid_entries()
         self._apply_mud_pool()
-        MUD.reload_muds()
+        reload_muds()

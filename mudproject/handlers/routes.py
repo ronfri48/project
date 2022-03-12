@@ -9,7 +9,7 @@ import threading
 #UPLOAD_FOLDER = "/var/www/uploads"
 
 # dev config
-UPLOAD_FOLDER = "/Users/eladbirnboim/uploads"
+UPLOAD_FOLDER = r"C:\Users\ronfr\Downloads"
 
 # const 
 MUD_FILE = "mud_file"

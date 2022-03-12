@@ -6,9 +6,10 @@ import logging
 #CACHE_FILE_PATH = "/var/www/uploads/DnsRecordsManager.db"
 
 # dev config
-CACHE_FILE_PATH = "/Users/eladbirnboim/uploads/DnsRecordsManager.db"
+CACHE_FILE_PATH = r"C:\Users\ronfr\Downloads\DnsRecordsManager.db"
 
 __all__ = ["DnsRecordsManager", "create", "get"]
+
 
 class DnsRecordsManager:
     def __init__(self):
@@ -34,15 +35,17 @@ class DnsRecordsManager:
         logging.info(f"clear_cache: Called")
         self._cache.clear()
 
-dnsRecordsManager = None
+
+dns_records_manager = None
+
 
 def get():
-    global dnsRecordsManager
-    if dnsRecordsManager is None:
-        dnsRecordsManager = DnsRecordsManager()
-    return dnsRecordsManager
+    global dns_records_manager
+    dns_records_manager = dns_records_manager if dns_records_manager else DnsRecordsManager()
+    return dns_records_manager
+
 
 def clear():
-    global dnsRecordsManager
-    if dnsRecordsManager is not None:
-        dnsRecordsManager._clear_cache()
+    global dns_records_manager
+    if dns_records_manager:
+        dns_records_manager._clear_cache()

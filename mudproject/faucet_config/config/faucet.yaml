@@ -1,5 +1,5 @@
 include:
-    - acl1.yaml
+    - HueBulb_acl.yml
 
 vlans:
     office:
@@ -143,7 +143,7 @@ dps:
                 description: "host1 network namespace"
                 native_vlan: office
                 #acls_in: [99, 97]
-                acls_in: [95, wow, 94]
+                acls_in: [95, hubbulb_rule, 94]
             2:
                 name: "h2"
                 description: "host2 network namespace"
