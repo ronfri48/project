@@ -11,8 +11,11 @@ from scapy.all import *
 from scapy.layers.dns import DNSQR
 from scapy.layers.dhcp import IP
 import socket
+import json
+import requests
 
 server_ip = '127.0.0.1'
+mud_updater_ip = '127.0.0.1'
 
 result = {}
 
@@ -30,9 +33,19 @@ def packet_handler(pkt):
     if pkt.haslayer(DNSQR):
         a = pkt[DNSQR]
         domain = str(a.qname)[2:-2]
-        domain_ip = _get_hostname_ip(domain)
+        domain_ip = _get_hostname_ip(domain)[1:-1]
         print(f"domain: {domain}, ip: {domain_ip}")
         result[domain] = domain_ip
+
+        url = f'http://{mud_updater_ip}:5000/update-dns'
+        ip_domain_data = json.dumps({"ip": f"{domain_ip}", "domain": f"{domain}"})
+
+        update_ip_domain = requests.post(
+            url,
+            headers={'Content-Type': 'application/json'},
+            data=ip_domain_data
+        )
+        assert update_ip_domain.status_code == 200
 
 
 packet_filter = " and ".join([
@@ -41,3 +54,4 @@ packet_filter = " and ".join([
     ])
 
 sniff(filter=packet_filter, prn=packet_handler)
+print("RONF")
