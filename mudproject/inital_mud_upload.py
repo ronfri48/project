@@ -9,15 +9,10 @@ def post_initial_mud_file():
     url = f'http://{mud_updater_ip}:5000/update-mud'
 
     __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    mud_file = os.path.join(__location__, 'huebulbmud.json')  # os.path.join(sys.path[0], "huebulbmud.json")
-    file = {'mud_file': open(mud_file, "rb")}
-    mud_data = open(mud_file, "rb")
-    data = {"mud_file": (mud_data, "huebulbmud.json")}
-    print(mud_data)
+    mud_file = os.path.join(__location__, r'tests\huebulbmud.json')  # os.path.join(sys.path[0], "huebulbmud.json")
+    file = {'mud_file': open(mud_file, "rb").read()}
     response = requests.post(
         url,
-        data=data,
-        headers={'Content-Type': 'application/json','buffered': 'True', },
         files=file
     )
 
