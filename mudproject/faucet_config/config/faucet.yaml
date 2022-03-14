@@ -85,6 +85,22 @@ acls:
                 allow: 1
                 output:
                     port: 2
+
+        - rule:
+            dl_type: 0x800
+            nw_dst: "192.168.1.1"
+            actions:
+                allow: 1
+                output:
+                    port: 2
+        - rule:
+            dl_type: 0x800
+            ipv4_src: "192.168.1.1"
+            ipv4_dst: "10.0.0.1"
+            actions:
+                allow: 1
+                output:
+                    port: 2
         - rule:
             dl_type: 0x800
             ipv4_src: "8.8.8.8"
