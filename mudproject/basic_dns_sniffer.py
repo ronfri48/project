@@ -15,12 +15,14 @@ import json
 import requests
 
 server_ip = '127.0.0.1'
-mud_updater_ip = '10.0.0.3'
+mud_updater_ip = '127.0.0.1'
 
 result = {}
 
 
 def _get_hostname_ip(domain):
+    print(f"Domain: {domain}")
+    print(f"Domain: {socket.gethostbyname(domain)}")
     return repr(socket.gethostbyname(domain))
 
 
@@ -54,4 +56,3 @@ packet_filter = " and ".join([
     ])
 
 sniff(filter=packet_filter, prn=packet_handler)
-print("RONF")
