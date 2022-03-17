@@ -13,8 +13,7 @@ from mudproject.faucet_config.faucet_editor import parse_base_file, add_new_ips,
 
 IOT = namedtuple('IOT', ['fqdn', 'ip', 'timestamp'])
 
-# TODO: Fix to real path
-ACLS_PATH = os.path.join(os.path.dirname(__file__), r'faucet_config\config')
+ACLS_PATH = '/etc/faucet'
 
 async def run(cmd):
     proc = await asyncio.create_subprocess_shell(
