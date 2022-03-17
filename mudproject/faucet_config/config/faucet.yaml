@@ -110,6 +110,36 @@ acls:
                 allow: 1
                 output:
                     port: 2
+        - rule:
+              dl_type: 0x800
+              nw_dst: "8.8.4.4"
+              actions:
+                  allow: 1
+                  output:
+                      port: 2
+        - rule:
+              dl_type: 0x800
+              ipv4_src: "8.8.4.4"
+              ipv4_dst: "10.0.0.1"
+              actions:
+                  allow: 1
+                  output:
+                      port: 2
+        - rule:
+              dl_type: 0x800
+              nw_dst: "10.10.10.1"
+              actions:
+                  allow: 1
+                  output:
+                      port: 2
+        - rule:
+              dl_type: 0x800
+              ipv4_src: "10.10.10.1"
+              ipv4_dst: "10.0.0.1"
+              actions:
+                  allow: 1
+                  output:
+                      port: 2
     enable_incoming_disable_outcoming:
         - rule:
             dl_type: 0x800
