@@ -1,0 +1,1 @@
+sudo python3 basic_dns_sniffer.py

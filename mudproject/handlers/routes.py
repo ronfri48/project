@@ -6,10 +6,10 @@ import threading
 
 
 # PROD config
-#UPLOAD_FOLDER = "/var/www/uploads"
+UPLOAD_FOLDER = "/var/www/uploads"
 
 # dev config
-UPLOAD_FOLDER = r"C:\Users\ronfr\Downloads"
+# UPLOAD_FOLDER = r"C:\Users\ronfr\Downloads"
 
 # const 
 MUD_FILE = "mud_file"
@@ -19,7 +19,8 @@ ONE_HOUR = 1000 * 60 * 60
 # global variables
 mud = MUD(ONE_HOUR)
 
-# jobs 
+
+# jobs
 def every(delay, task):
   next_time = time.time() + delay
   while True:
@@ -27,13 +28,13 @@ def every(delay, task):
     try:
       task()
     except Exception:
-      traceback.print_exc()
-      # in production code you might want to have this instead of course:
-      # logger.exception("Problem while executing repetitive task.")
+        pass
+
     # skip tasks if we are behind schedule:
     next_time += (time.time() - next_time) // delay * delay + delay
 
-# TODO remove comment
+
+# We can add dns resolving ttl
 #threading.Thread(target=lambda: every(300, mud.handle_invalidate_request)).start()
 
 
@@ -57,9 +58,12 @@ def configure_routes(app):
     @app.route('/update-dns', methods=['POST'])
     def update_dns():
       content_type = request.headers.get('Content-Type')
-      if (content_type != 'application/json'):
+
+      if content_type != 'application/json':
         return 'Content-Type not supported!', 400
+
       json = request.json
+
       if "domain" not in json or "ip" not in json:
         return 'request should be json with "dns" and "ip" properties', 400
 

@@ -22,9 +22,3 @@ def add_new_ips(existing_rule, base_new_ips):
         }})
 
     return existing_rule
-
-
-#data = parse_base_file(os.path.join(os.path.dirname(__file__), 'config/acl1.yml'))
-#data['acls'][list(data['acls'].keys())[0]] = add_new_ips(data['acls'][list(data['acls'].keys())[0]], ['9.9.9.9', '77.7.7.77'])
-
-#print(data)

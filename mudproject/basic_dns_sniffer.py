@@ -1,11 +1,4 @@
 #!usr/bin/python
-""" DNSnif.py-It basically captures all the DNS Queries from the traffic and It can be used
-    with an arp poisioning tool to capture the all the DNS Queries over the network
-
-    Author:Aditya Agrawal
-    Twitter: @exploitprotocol
-    Author is not responsible for any effect's caused by this script
-"""
 
 from scapy.all import *
 from scapy.layers.dns import DNSQR

@@ -3,10 +3,8 @@ import shelve
 import logging
 
 # PROD config
-#CACHE_FILE_PATH = "/var/www/uploads/DnsRecordsManager.db"
+CACHE_FILE_PATH = "/var/www/uploads/DnsRecordsManager.db"
 
-# dev config
-CACHE_FILE_PATH = r"C:\Users\ronfr\Downloads\DnsRecordsManager.db"
 
 __all__ = ["DnsRecordsManager", "create", "get"]
 
@@ -25,7 +23,6 @@ class DnsRecordsManager:
         if dns_name not in self._cache:
             if not allow_dns_query:
                 return None
-                #raise Exception("Could not find dns in cache")
             ip = socket.gethostbyname(dns_name)
             self.update_dns_ip(dns_name, ip)
         

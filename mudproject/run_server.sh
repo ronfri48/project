@@ -1,0 +1,1 @@
+sudo python3 server_main.py

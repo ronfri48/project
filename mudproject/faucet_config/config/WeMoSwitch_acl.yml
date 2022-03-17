@@ -1,0 +1,7 @@
+acls:
+  wemoswitch_rule:
+  - rule:
+      actions:
+        allow: 1
+      dl_type: 2048
+      nw_dst: 10.0.0.2
