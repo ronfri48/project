@@ -3,7 +3,7 @@ import shelve
 import logging
 
 # PROD config
-CACHE_FILE_PATH = "/var/www/uploads/DnsRecordsManager.db"
+CACHE_FILE_PATH = "/home/p4/Downloads/DnsRecordsManager.db"
 
 
 __all__ = ["DnsRecordsManager", "create", "get"]

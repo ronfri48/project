@@ -6,10 +6,7 @@ import threading
 
 
 # PROD config
-UPLOAD_FOLDER = "/var/www/uploads"
-
-# dev config
-# UPLOAD_FOLDER = r"C:\Users\ronfr\Downloads"
+UPLOAD_FOLDER = "/home/p4/Downloads"
 
 # const 
 MUD_FILE = "mud_file"
