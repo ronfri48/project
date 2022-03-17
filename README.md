@@ -1,6 +1,6 @@
 # How to run the MUD Environment
 
-1. git clone git@github.com:ronfri48/project.git or extract the code from the given zip
+1. git clone https://github.com/ronfri48/project.git or extract the code from the given zip
 
 2. change cwd to /mudproject
 
